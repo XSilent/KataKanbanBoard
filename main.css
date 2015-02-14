@@ -1,0 +1,35 @@
+body {
+    padding:15px;
+    font-family: Verdana;
+    background-color:lightgray;
+}
+
+#board {
+    font-size:12px;
+    background-color:white;
+}
+
+.column {
+    font-size: 10px;
+    float:left;
+    padding:5px;
+    margin:5px;
+    border:solid 1px darkgray;
+    background-color:white;
+}
+
+.columnHeader {
+    font-weight: bold;
+}
+
+.task {
+    border:dotted 1px gray;
+    margin:0px;
+    padding:14px;
+}
+
+ul .task {
+    list-style-type: none;
+}
+
+
