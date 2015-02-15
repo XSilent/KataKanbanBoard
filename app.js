@@ -5,7 +5,14 @@
  */
 var App = function()
 {
+	/**
+	 * Board
+	 */
 	var board;
+
+	/**
+	 * Tasks
+	 */
 	var tasks;
 
 	/**
@@ -17,10 +24,10 @@ var App = function()
 		board = new Board();
 		tasks = new Tasks();
 
-		var toDo = new Column('To Do');
-		var progress = new Column('Progress', toDo);
-		var review = new Column('Review', progress);
-		var done = new Column('Done', review);
+		var toDo = new Column('To Do', 10);
+		var progress = new Column('Progress', 3, toDo);
+		var review = new Column('Review', 3, progress);
+		var done = new Column('Done', 10, review);
 
 		board.addColumn(toDo);
 		board.addColumn(progress);
@@ -29,10 +36,11 @@ var App = function()
 
 		tasks.addTask(new Task('Milch kaufen', 'To Do'));
 		tasks.addTask(new Task('Kaffee kaufen', 'To Do'));
+		board.getColumn('To Do').addTask();
+		board.getColumn('To Do').addTask();
 
 		// register event listeners
 		document.getElementById('taskNew').onclick = function()  { that.doTaskNew(); };
-		document.getElementById('taskTake').onclick = function() { that.doTaskTake(); };
 	};
 
 	/**
@@ -58,17 +66,10 @@ var App = function()
 			return;
 		}
 
-		var task = new Task(taskName);
-		board.getColumn('To Do').addTask(tasks.addTask(task));
-		this.render();
-	};
+		tasks.addTask(new Task(taskName, 'To Do'));
+		board.getColumn('To Do').addTask();
 
-	/**
-	 * Take task (start working)
-	 */
-	this.doTaskTake = function()
-	{
-		alert('take task');
+		this.render();
 	};
 
 	/**
@@ -86,23 +87,17 @@ var App = function()
 		var task = tasks.getTaskByIndex(event.dataTransfer.getData('text'));
 		var oldColumnName = task.getColumnName();
 
-		var found = column.findInChain(oldColumnName);
 
-		// Set user for task
-		if (oldColumnName === 'To Do') {
-			var userName = prompt('Name of team member', '');
+		if (column.getTasksCount() === column.getWIPLimit()) {
+			alert('The WIP limit for this column is already reached!');
 
-			if (userName === '') {
-				return;
-			}
-
-			task.setUser(userName);
+			return;
 		}
 
 		var moveOk = false;
-		if (typeof column.getPrevious() === "undefined") {
 
-			moveOk = true
+		if (typeof column.getPrevious() === "undefined") {
+			moveOk = true;
 			task.setUser('');
 		} else {
 			if (column.getPrevious().getName() === oldColumnName) {
@@ -111,7 +106,21 @@ var App = function()
 		}
 
 		if (moveOk === true) {
+
+			// Set user for task
+			if (oldColumnName === 'To Do') {
+				var userName = prompt('Name of team member', '');
+
+				if ((userName == '') || (userName === null)) {
+					return;
+				}
+
+				task.setUser(userName);
+			}
+
 			task.setColumnName(newColumnName);
+			column.addTask();
+			board.getColumn(oldColumnName).removeTask();
 			this.render();
 		} else {
 			alert('This task move is not possible!');

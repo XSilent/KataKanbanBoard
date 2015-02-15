@@ -1,38 +1,58 @@
-var Column = function(columnName, previousColumn)
+/**
+ * Column
+ *
+ * @param columnName
+ * @param limit
+ * @param previousColumn
+ * @constructor
+ */
+var Column = function(columnName, limit, previousColumn)
 {
 	var name = columnName;
 	var columnPrevious = previousColumn;
-	var WIPLimit = 10;
-	var tasks = [];
+	var WIPLimit = limit;
+	var tasks = 0;
 
-
+	/**
+	 * Set column name
+	 * @param value
+	 */
 	this.setName = function(value)
 	{
 		name = value;
 	};
 
+	/**
+	 * Get column name
+	 *
+	 * @returns {*}
+	 */
 	this.getName = function()
 	{
 		return name;
 	};
 
+	/**
+	 * Get previous column
+	 * @returns {*}
+	 */
 	this.getPrevious = function()
 	{
-		//if (typeof previousColumn === 'undefined') {
-		//	previousColumn = null;
-		//}
-
 		return previousColumn;
 	};
 
+	/**
+	 * Find Column in chain
+	 *
+	 * @param columnName
+	 * @returns {*}
+	 */
 	this.findInChain = function(columnName)
 	{
 		var col = this.getPrevious();
 		var result;
 
 		while (typeof col !== "undefined") {
-			console.log('previous: ' + col.getName());
-
 			result = col;
 			col = col.getPrevious();
 		}
@@ -40,27 +60,48 @@ var Column = function(columnName, previousColumn)
 		return result;
 	};
 
+	/**
+	 * Get Work In Progress Limit
+	 * @returns {*}
+	 */
+	this.getWIPLimit = function()
+	{
+		return WIPLimit;
+	};
+
+	/**
+	 * Set Work In Progress limit
+	 *
+	 * @param value
+	 */
 	this.setWIPLimit = function(value)
 	{
 		WIPLimit = value;
 	};
 
-	this.addTask = function(task)
+	/**
+	 * add task
+	 */
+	this.addTask = function()
 	{
-		task.setColumnName(name);
-		tasks.push(task);
+		tasks++;
 	};
 
-	this.removeTask = function(task)
+	/**
+	 * remove task
+	 */
+	this.removeTask = function()
 	{
-		for (taskNr in tasks) {
-			if (tasks[taskNr].getName() === task.getName()) {
-				tasks.splice(taskNr);
-			}
-		}
+		tasks--;
 	};
 
-	this.getTasks = function()
+	/**
+	 * Get amount of task
+	 * for this column
+	 *
+	 * @returns {number}
+	 */
+	this.getTasksCount = function()
 	{
 		return tasks;
 	};

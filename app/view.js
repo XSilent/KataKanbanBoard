@@ -12,7 +12,6 @@ var View = function(viewName, appHandle)
 	var name = viewName;
 	var app = appHandle;
 
-
 	/**
 	 * columns to be rendered
 	 *
@@ -38,7 +37,7 @@ var View = function(viewName, appHandle)
 		columns = boardColumns;
 
 		return this;
-	}
+	};
 
 	/**
 	 * Set tasks
@@ -51,7 +50,7 @@ var View = function(viewName, appHandle)
 		tasks = boardTasks;
 
 		return this;
-	}
+	};
 
 	/**
 	 * Render columns and
@@ -62,7 +61,7 @@ var View = function(viewName, appHandle)
 		getElementColumns();
 
 		return this;
-	}
+	};
 
 	/**
 	 * DOM Elements for Columns
@@ -83,7 +82,7 @@ var View = function(viewName, appHandle)
 			var elemColHeader = document.createElement('div');
 			elemColHeader.className = 'columnHeader';
 			elemColHeader.id = 'colHeader_' + colNr;
-			elemColHeader.innerHTML = columns[colNr].getName();
+			elemColHeader.innerHTML = columns[colNr].getName() + ' (' + columns[colNr].getWIPLimit() + ')';
 			elemCol.appendChild(elemColHeader);
 			elemCol.ondragover = function(event) { event.preventDefault(); };
 			elemCol.ondrop = function(event) { that.app.doTaskDrop(event, this.getAttribute('data-colNr')); };
