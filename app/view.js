@@ -21,6 +21,13 @@ var View = function(viewName, appHandle)
 	var columns = [];
 
 	/**
+	 * tasks
+	 *
+	 * @type {Array}
+	 */
+	var tasks = [];
+
+	/**
 	 * Set columns
 	 *
 	 * @param boardColumns
@@ -29,6 +36,19 @@ var View = function(viewName, appHandle)
 	this.setColumns = function(boardColumns)
 	{
 		columns = boardColumns;
+
+		return this;
+	}
+
+	/**
+	 * Set tasks
+	 *
+	 * @param boardTasks
+	 * @returns {View}
+	 */
+	this.setTasks = function(boardTasks)
+	{
+		tasks = boardTasks;
 
 		return this;
 	}
@@ -44,6 +64,9 @@ var View = function(viewName, appHandle)
 		return this;
 	}
 
+	/**
+	 * DOM Elements for Columns
+	 */
 	function getElementColumns()
 	{
 		var elemBoard = document.getElementById('board');
@@ -73,7 +96,6 @@ var View = function(viewName, appHandle)
 		}
 	}
 
-
 	/**
 	 * Create DOM-Element with child-elements
 	 * for each task in the given column
@@ -83,25 +105,23 @@ var View = function(viewName, appHandle)
 	 */
 	function getElementTasks(columnName)
 	{
-		// get right column
-		for (colNr in columns) {
-			if (columns[colNr].getName() === columnName) {
-				var tasks = columns[colNr].getTasks();
-			}
-		}
-
 		var elemContainer = document.createElement('ul');
+		var taskColl = tasks.getTasks();
 
 		// create elements for each task
 		// in found column
-		for (taskNr in tasks) {
+		for (taskNr in taskColl) {
+
+			if (taskColl[taskNr].getColumnName() !== columnName) {
+				continue;
+			}
 
 			var elemItem = document.createElement('li');
 			elemItem.className = 'task';
 			elemItem.id = 'task_' + colNr;
-			elemItem.innerHTML = tasks[taskNr].getName();
+			elemItem.innerHTML = taskColl[taskNr].getName();
 			elemItem.setAttribute("data-taskNr", taskNr);
-			elemItem.ondragstart = function(event) { event.dataTransfer.setData('text', this.getAttribute('data-taskNr'), this.id   ); };
+			elemItem.ondragstart = function(event) { event.dataTransfer.setData('text', this.getAttribute('data-taskNr')); };
 			elemItem.draggable = true;
 
 			elemContainer.appendChild(elemItem);
@@ -109,4 +129,4 @@ var View = function(viewName, appHandle)
 
 		return elemContainer;
 	}
-}
+};

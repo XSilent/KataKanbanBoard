@@ -1,8 +1,8 @@
-var Task = function(taskName)
+var Task = function(taskName, column)
 {
 	var name = taskName;
+	var columnName = column;
 	var user = '';
-	var columnName = '';
 
 	this.setUser = function(value)
 	{
@@ -37,5 +37,5 @@ var Task = function(taskName)
 	this.new = function(name)
 	{
 		return new Task(name);
-	}
-}
+	};
+};

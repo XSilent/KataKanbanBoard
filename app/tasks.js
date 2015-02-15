@@ -18,8 +18,26 @@ var Tasks = function()
 		}
 	};
 
+	this.getTasks = function()
+	{
+		return taskCollection;
+	};
+
 	this.getTaskByIndex = function(index)
 	{
 		return taskCollection[index];
+	};
+
+	this.getTasksForColumn = function (columnName)
+	{
+		var tasks = [];
+
+		for (taskNr in taskCollection) {
+			if (taskCollection[taskNr].getColumnName() === columnName) {
+				tasks.push(taskCollection[taskNr]);
+			}
+		}
+
+		return tasks;
 	};
 }

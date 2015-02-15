@@ -1,13 +1,16 @@
-function test()
-{
-	console.log('test called!');
-}
-
+/**
+ * Application
+ *
+ * @constructor
+ */
 var App = function()
 {
 	var board;
 	var tasks;
 
+	/**
+	 * Init board and data
+	 */
 	this.init = function()
 	{
 		var that = this;
@@ -19,22 +22,30 @@ var App = function()
 		board.addColumn(new Coloumn('Review'));
 		board.addColumn(new Coloumn('Done'));
 
-		board.getColumn('To Do').addTask(tasks.addTask(new Task('Tests schreiben')));
-		board.getColumn('To Do').addTask(tasks.addTask(new Task('Neuen Kaffee kaufen')));
+		tasks.addTask(new Task('Tests schreiben', 'To Do'));
+		tasks.addTask(new Task('Neuen Kaffee kaufen', 'To Do'));
 
 		// register event listeners
 		document.getElementById('taskNew').onclick = function()  { that.doTaskNew(); };
 		document.getElementById('taskTake').onclick = function() { that.doTaskTake(); };
 	};
 
+	/**
+	 * render board
+	 */
 	this.render = function()
 	{
 		var view = new View('Columns', this);
 
 		view.setColumns(board.getColumns());
+		view.setTasks(tasks);
+
 		view.render();
 	};
 
+	/**
+	 * new task
+	 */
 	this.doTaskNew = function()
 	{
 		var taskName = window.prompt('Enter task name', '');
@@ -47,26 +58,32 @@ var App = function()
 		this.render();
 	};
 
+	/**
+	 * Take task (start working)
+	 */
 	this.doTaskTake = function()
 	{
 		alert('take task');
 	};
 
+	/**
+	 * Task dropped in other column
+	 * (move task on board)
+	 *
+	 * @param event
+	 * @param columnNr
+	 */
 	this.doTaskDrop = function(event, columnNr)
 	{
-		var taskNr = event.dataTransfer.getData('text');
 		var column = board.getColumnByIndex(columnNr);
-		var newColumn = column.getName();
 
-		var task = tasks.getTaskByIndex(taskNr);
-		var oldColumn = task.getColumnName();
+		var newColumnName = column.getName();
+		var task = tasks.getTaskByIndex(event.dataTransfer.getData('text'));
 
-		board.getColumn(oldColumn).removeTask(task);
-		board.getColumn(newColumn).addTask(task);
+		task.setColumnName(newColumnName);
 
 		this.render();
 	};
-
 };
 
 var app = new App();
