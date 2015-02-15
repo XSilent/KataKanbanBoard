@@ -22,16 +22,21 @@ var Coloumn = function(columnName)
 
 	this.addTask = function(task)
 	{
+		task.setColumnName(name);
 		tasks.push(task);
 	};
 
 	this.removeTask = function(task)
 	{
-		//tickets.pop()
-	}
+		for (taskNr in tasks) {
+			if (tasks[taskNr].getName() === task.getName()) {
+				tasks.splice(taskNr);
+			}
+		}
+	};
 
 	this.getTasks = function()
 	{
 		return tasks;
-	}
+	};
 };

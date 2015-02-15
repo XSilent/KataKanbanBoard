@@ -32,4 +32,16 @@ ul .task {
     list-style-type: none;
 }
 
+#toolbar {
+    border:solid 1px lightgray;
+    background-color:darkgray;
+    margin-top:20px;
+    padding:10px;
+}
+
+.toolbarButton {
+    padding:4px;
+}
+
+
 

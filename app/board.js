@@ -21,4 +21,9 @@ var Board = function()
 		return columns;
 	};
 
+	this.getColumnByIndex = function(index)
+	{
+		return columns[index];
+	};
+
 };
