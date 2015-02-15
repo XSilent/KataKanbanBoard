@@ -18,6 +18,12 @@ body {
     background-color:white;
 }
 
+.user {
+    font-size:8px;
+    padding-left:2px;
+    background-color:yellow;
+}
+
 .columnHeader {
     font-weight: bold;
 }

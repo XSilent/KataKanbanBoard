@@ -17,13 +17,18 @@ var App = function()
 		board = new Board();
 		tasks = new Tasks();
 
-		board.addColumn(new Coloumn('To Do'));
-		board.addColumn(new Coloumn('In Progress'));
-		board.addColumn(new Coloumn('Review'));
-		board.addColumn(new Coloumn('Done'));
+		var toDo = new Column('To Do');
+		var progress = new Column('Progress', toDo);
+		var review = new Column('Review', progress);
+		var done = new Column('Done', review);
 
-		tasks.addTask(new Task('Tests schreiben', 'To Do'));
-		tasks.addTask(new Task('Neuen Kaffee kaufen', 'To Do'));
+		board.addColumn(toDo);
+		board.addColumn(progress);
+		board.addColumn(review);
+		board.addColumn(done);
+
+		tasks.addTask(new Task('Milch kaufen', 'To Do'));
+		tasks.addTask(new Task('Kaffee kaufen', 'To Do'));
 
 		// register event listeners
 		document.getElementById('taskNew').onclick = function()  { that.doTaskNew(); };
@@ -79,10 +84,38 @@ var App = function()
 
 		var newColumnName = column.getName();
 		var task = tasks.getTaskByIndex(event.dataTransfer.getData('text'));
+		var oldColumnName = task.getColumnName();
 
-		task.setColumnName(newColumnName);
+		var found = column.findInChain(oldColumnName);
 
-		this.render();
+		// Set user for task
+		if (oldColumnName === 'To Do') {
+			var userName = prompt('Name of team member', '');
+
+			if (userName === '') {
+				return;
+			}
+
+			task.setUser(userName);
+		}
+
+		var moveOk = false;
+		if (typeof column.getPrevious() === "undefined") {
+
+			moveOk = true
+			task.setUser('');
+		} else {
+			if (column.getPrevious().getName() === oldColumnName) {
+				moveOk = true;
+			}
+		}
+
+		if (moveOk === true) {
+			task.setColumnName(newColumnName);
+			this.render();
+		} else {
+			alert('This task move is not possible!');
+		}
 	};
 };
 

@@ -124,6 +124,14 @@ var View = function(viewName, appHandle)
 			elemItem.ondragstart = function(event) { event.dataTransfer.setData('text', this.getAttribute('data-taskNr')); };
 			elemItem.draggable = true;
 
+			var elemItemUser = document.createElement('span');
+			elemItemUser.className = 'user';
+			elemItemUser.innerHTML = taskColl[taskNr].getUser();
+
+			if (taskColl[taskNr].getUser() !== '') {
+				elemItem.appendChild(elemItemUser);
+			}
+
 			elemContainer.appendChild(elemItem);
 		}
 
